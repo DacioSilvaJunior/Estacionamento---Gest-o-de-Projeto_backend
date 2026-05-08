@@ -1,0 +1,17 @@
+{
+  "name": "estacionamento-gestao-projeto",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/api",
+    "apps/web",
+    "packages/shared"
+  ],
+  "scripts": {
+    "dev:api": "npm -w apps/api run dev",
+    "build:api": "npm -w apps/api run build",
+    "prisma:generate": "npm -w apps/api run prisma:generate",
+    "prisma:migrate": "npm -w apps/api run prisma:migrate --",
+    "prisma:studio": "npm -w apps/api run prisma:studio"
+  }
+}
