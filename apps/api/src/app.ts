@@ -1,5 +1,8 @@
 import cors from 'cors';
 import express from 'express';
+import { ownerRoutes } from './modules/owners/owner.routes';
+import { parkingRecordRoutes } from './modules/parking-records/parking-record.routes';
+import { errorHandler } from './shared/middlewares/errorHandler';
 
 export const app = express();
 
@@ -12,3 +15,8 @@ app.get('/health', (request, response) => {
     message: 'Parking Register API is running',
   });
 });
+
+app.use('/owners', ownerRoutes);
+app.use('/parking-records', parkingRecordRoutes);
+
+app.use(errorHandler);
