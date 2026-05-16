@@ -4,6 +4,7 @@ import { ownerRoutes } from './modules/owners/owner.routes';
 import { parkingRecordRoutes } from './modules/parking-records/parking-record.routes';
 import { errorHandler } from './shared/middlewares/errorHandler';
 
+
 export const app = express();
 
 app.use(cors());
@@ -20,3 +21,10 @@ app.use('/owners', ownerRoutes);
 app.use('/parking-records', parkingRecordRoutes);
 
 app.use(errorHandler);
+import {vehicleRoutes}
+from './modules/vehicles/vehicle.routes';
+
+app.use(
+'/vehicles',
+vehicleRoutes
+);

@@ -1,16 +1,28 @@
-import { Router } from 'express';
-import { asyncHandler } from '../../shared/middlewares/asyncHandler';
-import { validateRequest } from '../../shared/middlewares/validateRequest';
-import { ParkingRecordController } from './parking-record.controller';
-import { createEntrySchema } from './parking-record.schema';
+import {Router} from 'express';
+import controller from './parking-record.controller';
 
-const parkingRecordRoutes = Router();
-const parkingRecordController = new ParkingRecordController();
+const router=Router();
 
-parkingRecordRoutes.post(
-  '/entry',
-  validateRequest(createEntrySchema),
-  asyncHandler(parkingRecordController.createEntry.bind(parkingRecordController)),
+router.post(
+'/entry',
+controller.entry
 );
 
-export { parkingRecordRoutes };
+router.put(
+'/exit/:id',
+controller.exit
+);
+
+router.get(
+'/history',
+controller.history
+);
+
+router.get(
+'/search',
+controller.search
+);
+
+export {
+router as parkingRecordRoutes
+};
