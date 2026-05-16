@@ -1,4 +1,4 @@
-import { prisma } from '../../shared/database/prisma';
+import { prisma } from '../../database/prisma';
 
 class VehicleService {
 

@@ -1,9 +1,5 @@
+import { prisma } from '../../shared/database/prisma';
 import { AppError } from '../../shared/errors/AppError';
-import { normalizePlate } from '../../shared/utils/normalizePlate';
-import { VehicleRepository } from '../vehicles/vehicle.repository';
-import { ParkingRecordRepository } from './parking-record.repository';
-import { CreateEntryInput } from './parking-record.types';
-
 
 class ParkingRecordService {
 
@@ -22,8 +18,9 @@ plate
 
 if(!vehicle){
 
-throw new Error(
-"Veículo não encontrado"
+throw new AppError(
+'Veículo não encontrado',
+404
 );
 
 }
@@ -40,8 +37,9 @@ exitAt:null
 
 if(activeRecord){
 
-throw new Error(
-"Veículo já está estacionado"
+throw new AppError(
+'Veículo já estacionado',
+400
 );
 
 }
@@ -55,7 +53,6 @@ vehicleId:vehicle.id
 });
 
 }
-
 
 async registerExit(
 recordId:string
@@ -72,8 +69,18 @@ id:recordId
 
 if(!record){
 
-throw new Error(
-"Registro não encontrado"
+throw new AppError(
+'Registro não encontrado',
+404
+);
+
+}
+
+if(record.exitAt){
+
+throw new AppError(
+'Veículo já saiu',
+400
 );
 
 }
@@ -92,124 +99,6 @@ exitAt:new Date()
 
 }
 
-async history(){
-
-return prisma.parkingRecord.findMany({
-
-include:{
-
-vehicle:{
-
-include:{
-owner:true
-}
-
-}
-
-}
-
-});
-
-}
-
-async search(
-plate?:string,
-name?:string
-){
-
-return prisma.parkingRecord.findMany({
-
-where:{
-
-vehicle:{
-
-plate:plate,
-
-owner:{
-
-name:{
-contains:name
-}
-
-}
-
-}
-
-},
-
-include:{
-
-vehicle:{
-include:{
-owner:true
-}
-}
-
-}
-
-});
-
-}
-
 }
 
 export default new ParkingRecordService();
-import {Request,Response} from 'express';
-import parkingService from './parking-record.service';
-
-class ParkingRecordController{
-
-async entry(req:Request,res:Response){
-
-const result=
-await parkingService.registerEntry(
-req.body.plate
-);
-
-return res.json(result);
-
-}
-
-async exit(req:Request,res:Response){
-
-const result=
-await parkingService.registerExit(
-req.params.id
-);
-
-return res.json(result);
-
-}
-
-async history(
-req:Request,
-res:Response
-){
-
-const result=
-await parkingService.history();
-
-return res.json(result);
-
-}
-
-async search(
-req:Request,
-res:Response
-){
-
-const result=
-await parkingService.search(
-
-req.query.plate as string,
-req.query.name as string
-
-);
-
-return res.json(result);
-
-}
-
-}
-
-export default new ParkingRecordController();

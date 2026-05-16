@@ -1,5 +1,5 @@
 import { Request,Response } from 'express';
-import vehicleService from './vehicle.service';
+import vehicleService from './vehicles.service';
 
 class VehicleController{
 
